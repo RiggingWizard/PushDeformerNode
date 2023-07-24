@@ -47,10 +47,11 @@ MStatus PushDeformerNode::deform(MDataBlock& dataBlock, MItGeometry& geoIter, co
 	geoIter.reset();
 	while (!geoIter.isDone())
 	{
+		float sourceWeight = weightValue(dataBlock, multiIndex, geoIter.index());
 		ptLocal = geoIter.position();
 		normal = normals[geoIter.index()];
 
-		targetVector = ptLocal + (normal*pushValue);
+		targetVector = ptLocal + (normal*pushValue)*sourceWeight*envelopeValue;
 		geoIter.setPosition(targetVector);
 
 		geoIter.next();
@@ -69,7 +70,6 @@ MStatus PushDeformerNode::initialize()
 	MFnNumericAttribute numericAttr;
 	pushObj = numericAttr.create("pushVertex", "push", MFnNumericData::kFloat, 0.0f);
 	numericAttr.setKeyable(true);
-	//numericAttr.setReadable(true);
 
 	addAttribute(pushObj);
 	attributeAffects(pushObj, outputGeom);

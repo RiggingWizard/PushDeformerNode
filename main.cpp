@@ -27,6 +27,10 @@ MStatus initializePlugin(MObject pluginObj)
 		return status;
 	}
 
+	MString cmd = MString("import maya.cmds as cmds\n");
+	cmd += MString("cmds.makePaintable(\"") + PushDeformerNode::GetTypeName() + MString("\", \"weights\", attrType=\"multiFloat\", shapeMode=\"deformer\")");
+	MGlobal::executePythonCommand(cmd);
+
 	return MS::kSuccess;
 }
 
